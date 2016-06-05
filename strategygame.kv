@@ -1,4 +1,5 @@
 #:import math math
+#:import utils kivy.utils
 #:include debug.kv
 
 <StrategyGame>:
@@ -79,18 +80,17 @@
 
 
 <HexagonBackdrop@Label>:
-    size_hint: 1, 1
-    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-    size: self.size
-    pos: self.pos
+    size_hint: 1, None
     canvas.after:
         Color:
             rgba: 0.67, 0.8, 0.94, 1
         Ellipse:
             segments: 6
+            pos: self.pos
         Color:
-            rgba: 1, 0, 0, 1
+            rgba: utils.get_color_from_hex('#FF0000')
         Ellipse:
             segments: 3
             angle_start: 0
             angle_end: 180
+            pos: self.pos
