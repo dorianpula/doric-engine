@@ -1,4 +1,5 @@
 #:import math math
+#:include debug.kv
 
 <StrategyGame>:
     id: _game
@@ -18,26 +19,12 @@
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, .5
-                Label:
-                    id: _exo
-                    size_hint: 1, None
-                    text: 'Experimental'
-                    canvas.before:
-                        Color:
-                            rgba: .49, .49, .81, 1
-                        Rectangle:
-                            pos: _exo.pos
-                            size: _exo.size
-                        Color:
-                            rgba: 1, 0, 0, 1
-                        Ellipse:
-                            segments: 6
-                            size: 500, 500
-                        Color:
-                            rgba: 0.67, 0.8, 0.94, 1
-                        Ellipse:
-                            segments: 6
-
+                HexagonBackdrop:
+                    DebugLabel:
+                        text: '1'
+                HexagonBackdrop:
+                    DebugLabel:
+                        text: '2'
         BoxLayout:
             orientation: 'vertical'
             size_hint: .25, 1
@@ -91,5 +78,19 @@
     height: self.width / math.sqrt(3)
 
 
-<NoveauHexMapCell@Ellipse>:
-    size_hint: 1, None
+<HexagonBackdrop@Label>:
+    size_hint: 1, 1
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size: self.size
+    pos: self.pos
+    canvas.after:
+        Color:
+            rgba: 0.67, 0.8, 0.94, 1
+        Ellipse:
+            segments: 6
+        Color:
+            rgba: 1, 0, 0, 1
+        Ellipse:
+            segments: 3
+            angle_start: 0
+            angle_end: 180

@@ -96,10 +96,5 @@ class StrategyGameApp(app.App):
         return StrategyGame()
 
 
-def convert_hex_code_into_floats(color):
-    return [round(int(x, base=16) / 255.0, 2)
-            for x in ['0x' + color[x] + color[x + 1]
-                      for x in xrange(0, len(color), 2)]]
-
 if __name__ == '__main__':
     StrategyGameApp().run()
