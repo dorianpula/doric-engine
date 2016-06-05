@@ -7,11 +7,37 @@
     map_cols: 10
     BoxLayout:
         orientation: 'horizontal'
-        GridLayout:
-            id: _main_map
-            game: _game
-            cols: root.map_cols
+        BoxLayout:
+            orientation: 'vertical'
             size_hint: .75, 1
+            GridLayout:
+                id: _main_map
+                game: _game
+                cols: root.map_cols
+                size_hint: 1, .5
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, .5
+                Label:
+                    id: _exo
+                    size_hint: 1, None
+                    text: 'Experimental'
+                    canvas.before:
+                        Color:
+                            rgba: .49, .49, .81, 1
+                        Rectangle:
+                            pos: _exo.pos
+                            size: _exo.size
+                        Color:
+                            rgba: 1, 0, 0, 1
+                        Ellipse:
+                            segments: 6
+                            size: 500, 500
+                        Color:
+                            rgba: 0.67, 0.8, 0.94, 1
+                        Ellipse:
+                            segments: 6
+
         BoxLayout:
             orientation: 'vertical'
             size_hint: .25, 1
@@ -63,3 +89,7 @@
 <HexMapCell>:
     size_hint: 1, None
     height: self.width / math.sqrt(3)
+
+
+<NoveauHexMapCell@Ellipse>:
+    size_hint: 1, None

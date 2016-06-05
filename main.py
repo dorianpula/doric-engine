@@ -26,9 +26,9 @@ class StrategyGame(FloatLayout):
             self.main_map.add_widget(hex_cell)
 
             # Add overlay conditionally.
-            if (row % 6 == 2 and col % 2 == 0) or (row % 6 == 5 and col % 2 == 1):
-                print('({}, {})'.format(row, col))
-                self.add_widget(HexMapControlCell(hex_bind=hex_cell))
+            # if (row % 6 == 2 and col % 2 == 0) or (row % 6 == 5 and col % 2 == 1):
+            #     print('({}, {})'.format(row, col))
+            #     self.add_widget(HexMapControlCell(hex_bind=hex_cell))
 
     @staticmethod
     def pick_hex_cell(row, col):
@@ -94,6 +94,12 @@ class HexMapControlCell(button.Button):
 class StrategyGameApp(app.App):
     def build(self):
         return StrategyGame()
+
+
+def convert_hex_code_into_floats(color):
+    return [round(int(x, base=16) / 255.0, 2)
+            for x in ['0x' + color[x] + color[x + 1]
+                      for x in xrange(0, len(color), 2)]]
 
 if __name__ == '__main__':
     StrategyGameApp().run()
