@@ -45,39 +45,6 @@
                 background_color: .75, .71, .99, 1
 
 
-<BU>:
-    canvas:
-        Color:
-            rgba: (1,1,1,1)
-        Line:
-            points: (self.x, self.y, self.right, self.top)
-            width: 2
-<TD>:
-    canvas:
-        Color:
-            rgba: (1,1,1,1)
-        Line:
-            points: (self.x, self.top, self.right, self.y)
-            width: 2
-<L>:
-    canvas:
-        Color:
-            rgba: (1,1,1,1)
-        Line:
-            points: (self.x, self.y, self.x, self.top)
-            width: 2
-<R>:
-    canvas:
-        Color:
-            rgba: (1,1,1,1)
-        Line:
-            points: (self.right, self.y, self.right, self.top)
-            width: 2
-
-<HexMapCell>:
-    size_hint: 1, None
-    height: self.width / math.sqrt(3)
-
 
 <HexagonBackdrop@Label>:
     size_hint: 1, None
@@ -94,3 +61,12 @@
             angle_start: 0
             angle_end: 180
             pos: self.pos
+
+<MapHexCell@Label>:
+    size_hint: 1, None
+    canvas.after:
+        Color:
+            rgba: utils.get_color_from_hex('#FF00FF')
+        Line:
+            width: 1
+            circle: (self.center_x, self.center_y, 50, 0, 360, 6)
