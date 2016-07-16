@@ -16,7 +16,6 @@ class StrategyGame(FloatLayout):
     map_cols = properties.NumericProperty(0)
 
     def __init__(self, **kwargs):
-        self.register_event_type('on_cell_selection')
         super(StrategyGame, self).__init__(**kwargs)
 
         number_of_regions = self.map_rows * self.map_cols
@@ -58,7 +57,7 @@ class StrategyGame(FloatLayout):
                 # Bind the cell code so as to update its position and size when the parent widget resizes.
                 hex_cell.bind(pos=hex_cell.update_pos, size=hex_cell.update_pos)
 
-    def on_cell_selection(self, coords, terrain_colour, *args):
+    def update_selected_cell(self, coords, terrain_colour, *args):
         self.status.text = 'Coords: ({}, {})'.format(coords[0], coords[1])
         self.status.background_color = Color(*terrain_colour)
         return True
@@ -120,7 +119,7 @@ class HexMapCell(Label):
             radius = 2 * self.height
             self.ell = Line(circle=(self.x, self.y, radius, 0, 360, 6), width=2)
 
-        self.parent.parent.parent.dispatch('on_cell_selection', self.map_coordinates(), self.terrain_colour)
+        self.parent.game.update_selected_cell(self.map_coordinates(), self.terrain_colour)
         return True
 
 
