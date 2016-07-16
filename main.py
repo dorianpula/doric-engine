@@ -11,10 +11,12 @@ MapCoords = collections.namedtuple('MapCoords', ['row', 'col'])
 
 class StrategyGame(FloatLayout):
     main_map = properties.ObjectProperty(None)
+    status = properties.ObjectProperty(None)
     map_rows = properties.NumericProperty(0)
     map_cols = properties.NumericProperty(0)
 
     def __init__(self, **kwargs):
+        self.register_event_type('on_cell_selection')
         super(StrategyGame, self).__init__(**kwargs)
 
         number_of_regions = self.map_rows * self.map_cols
@@ -43,7 +45,8 @@ class StrategyGame(FloatLayout):
                     hex_cell.ell = Line(circle=(hex_cell.x, hex_cell.y, radius, 0, 360, 6), width=2)
 
                     # Create the solid background of the hexagon, from the bottom left coordinate of the hex.
-                    Color(*kivy.utils.get_random_color(alpha=.5))
+                    hex_cell.terrain_colour = kivy.utils.get_random_color(alpha=.5)
+                    Color(*hex_cell.terrain_colour)
                     hex_cell.solid = Ellipse(pos=(solid_x, solid_y), size=solid_size, segments=6)
 
                     Color(1, 1, 1, 1)
@@ -55,6 +58,11 @@ class StrategyGame(FloatLayout):
                 # Bind the cell code so as to update its position and size when the parent widget resizes.
                 hex_cell.bind(pos=hex_cell.update_pos, size=hex_cell.update_pos)
 
+    def on_cell_selection(self, coords, terrain_colour, *args):
+        self.status.text = 'Coords: ({}, {})'.format(coords[0], coords[1])
+        self.status.background_color = Color(*terrain_colour)
+        return True
+
 
 class HexMapCell(Label):
     def __init__(self, row=0, col=0, **kwargs):
@@ -62,15 +70,14 @@ class HexMapCell(Label):
         self.coords = MapCoords(row, col)
         self.selected = False
         self.visible_on_map = False
+        self.terrain_colour = Color(0, 0, 0, 1)
 
-    def coordinate_text(self):
-        return '({}, {})'.format(self.coords.row, self.coords.col)
-
-    def map_coordinate_text(self):
-        return '[{}, {}]'.format(self.coords.row / 3, self.coords.col / 2)
+    def map_coordinates(self):
+        return self.coords.row / 3, self.coords.col / 2
 
     def map_display_text(self):
-        return "{}\n{}".format(self.coordinate_text(), self.map_coordinate_text())
+        map_x, map_y = self.map_coordinates()
+        return "({}, {})".format(map_x, map_y)
 
     def update_pos(self, instance, value):
         # Determine the location of the solid hexagon cell.  Needs to be offset from the centre of the hex.
@@ -112,6 +119,8 @@ class HexMapCell(Label):
                 Color(*kivy.utils.get_color_from_hex('#FF0000'))
             radius = 2 * self.height
             self.ell = Line(circle=(self.x, self.y, radius, 0, 360, 6), width=2)
+
+        self.parent.parent.parent.dispatch('on_cell_selection', self.map_coordinates(), self.terrain_colour)
         return True
 
 
