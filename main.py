@@ -3,7 +3,7 @@ import collections
 from kivy import app, properties
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics import Color, Ellipse, Line
+from kivy.graphics import Color, Ellipse, Line, Rectangle
 import kivy.utils
 
 MapCoords = collections.namedtuple('MapCoords', ['row', 'col'])
@@ -59,7 +59,9 @@ class StrategyGame(FloatLayout):
 
     def update_selected_cell(self, coords, terrain_colour, *args):
         self.status.text = 'Coords: ({}, {})'.format(coords[0], coords[1])
-        self.status.background_color = Color(*terrain_colour)
+        with self.status.canvas.before:
+            Color(*terrain_colour)
+            Rectangle(pos=self.status.pos, size=self.status.size)
         return True
 
 
