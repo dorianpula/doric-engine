@@ -1,52 +1,15 @@
 import collections
-import random
 
-from kivy import app, properties
-from kivy.logger import Logger
-from kivy.uix.label import Label
-from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics import Color, Ellipse, Line, Rectangle
-from kivy.vector import Vector
 import kivy.utils
+from kivy import app, properties
+from kivy.graphics import Color, Ellipse, Line, Rectangle
+from kivy.logger import Logger
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
+from kivy.vector import Vector
+from terrain import Terrains, choose_random_terrain
 
 MapCoords = collections.namedtuple('MapCoords', ['row', 'col'])
-Terrains = {
-    'plain': {
-        'color': '#71CD00'
-    },
-    'hill':{
-        'color': '#505355'
-    },
-    'water':{
-        'color': '#5D88F8'
-    },
-    'sand':{
-        'color': '#F9CF29'
-    },
-    'forest':{
-        'color': '#10A71E'
-    },
-    'city':{
-        'color': '#A1A5AA'
-    }
-}
-
-
-
-def choose_random_terrain():
-    random_terrain_seed = random.randint(0, 100)
-    terrain = 'plain'
-    if 0 < random_terrain_seed < 20:
-        terrain = 'forest'
-    elif 20 < random_terrain_seed < 25:
-        terrain = 'hill'
-    elif 50 < random_terrain_seed < 60:
-        terrain = 'water'
-    elif 70 < random_terrain_seed < 90:
-        terrain = 'sand'
-    elif 90 < random_terrain_seed < 100:
-        terrain = 'city'
-    return terrain
 
 
 class StrategyGame(FloatLayout):
@@ -80,11 +43,6 @@ class StrategyGame(FloatLayout):
                 solid_size = (4*hex_cell.height, 4*hex_cell.height)
 
                 with hex_cell.canvas.after:
-
-                    # Create the outline of hexagon, based off the centre of the hex.
-                    Color(*kivy.utils.get_color_from_hex('#A1A5AA'))
-                    hex_cell.ell = Line(circle=(hex_cell.x, hex_cell.y, radius, 0, 360, 6), width=2)
-
                     # Pick a random terrain for each hex.
                     hex_cell.terrain = choose_random_terrain()
 
@@ -93,7 +51,11 @@ class StrategyGame(FloatLayout):
                     Color(*hex_cell.terrain_colour)
                     hex_cell.solid = Ellipse(pos=(solid_x, solid_y), size=solid_size, segments=6)
 
-                    Color(1, 1, 1, 1)
+                    # Create the outline of hexagon, based off the centre of the hex.
+                    Color(*kivy.utils.get_color_from_hex('#000000'))
+                    hex_cell.ell = Line(circle=(hex_cell.x, hex_cell.y, radius, 0, 360, 6), width=2)
+
+                    Color(0, 0, 0, 1)
                     hex_cell.coord_label = Label(
                         text=hex_cell.map_display_text(),
                         center_x=hex_cell.x,
@@ -152,7 +114,7 @@ class HexMapCell(Label):
             return False
 
         with self.canvas.after:
-            Color(*kivy.utils.get_color_from_hex('#A1A5AA'))
+            Color(*kivy.utils.get_color_from_hex('#000000'))
             radius = 2 * self.height
             self.ell = Line(circle=(self.x, self.y, radius, 0, 360, 6), width=2)
 
