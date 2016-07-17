@@ -1,10 +1,10 @@
 import collections
 from math import ceil
 
-import kivy.utils
 from kivy.logger import Logger
 from kivy.uix.label import Label
-from kivy.graphics import Color, Ellipse, Line
+from kivy.graphics import Color, Line
+import kivy.utils
 from kivy.vector import Vector
 
 MapCoords = collections.namedtuple('MapCoords', ['row', 'col'])
@@ -14,43 +14,42 @@ class HexMapCell(Label):
     def __init__(self, row=0, col=0, **kwargs):
         super(HexMapCell, self).__init__(**kwargs)
         self.coords = MapCoords(row, col)
-        ## set the cube coordinates of the hexagon
-        ## as [x, y, z]
+        # set the cube coordinates of the hexagon
+        # as [x, y, z]
         self.cube_coords = self.even_r_to_cube(self.coords.row / 3, self.coords.col / 2)
         self.selected = False
         self.visible_on_map = False
         self.terrain_colour = Color(0, 0, 0, 1)
         self.terrain = ''
 
-    def even_r_to_cube(self, row, col):
-        '''compute cube coordinates from even-r hex coordinates'''
+    @staticmethod
+    def even_r_to_cube(row, col):
+        """compute cube coordinates from even-r hex coordinates"""
         x = int(col - ceil(float(row)/2))
         z = row
         y = - x - z
-        return([x, y, z])
+        return [x, y, z]
 
-    def cube_to_even_r(self, x, y, z):
+    @staticmethod
+    def cube_to_even_r(x, y, z):
         row = int(x + ceil(z / 2))
         col = z
         return ([row, col])
 
     @property
     def even_r_coords(self):
-        '''return even-r coordinates of the hexagon.'''
-        return(self.cube_to_even_r(*self.cube_coords))
+        """return even-r coordinates of the hexagon."""
+        return self.cube_to_even_r(*self.cube_coords)
 
     @even_r_coords.setter
     def even_r_coords(self, value):
         self.cube_coords = self.even_r_to_cube(*value)
 
-    def coordinate_text(self):
-        return '({}, {})'.format(self.coords.row, self.coords.col)
-
     def even_r_coordinate_text(self):
         return '{}'.format(self.even_r_coords)
 
     def cube_coordinate_text(self):
-        return '{}\n{}\n{}'.format(*self.cube_coords)
+        return '{!r}'.format(self.cube_coords)
 
     def map_display_text(self):
         return "{}\n{} \n {}".format(self.even_r_coordinate_text(), self.cube_coordinate_text(), self.terrain)
