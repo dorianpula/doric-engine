@@ -1,6 +1,7 @@
 import collections
 
 from kivy import app, properties
+from kivy.logger import Logger
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Color, Ellipse, Line, Rectangle
@@ -102,22 +103,19 @@ class HexMapCell(Label):
         if super(HexMapCell, self).on_touch_down(touch):
             return False
 
+        coord_x, coord_y = self.map_coordinates()
         if not self.visible_on_map:
             return False
 
-        if not self.collide_point(touch.x, touch.y):
+        Logger.debug("Visibly Touched! {}, {} at {}, {}".format(touch.x, touch.y, coord_x, coord_y))
+        if not self.collide_with_bounding_circle(touch.x, touch.y):
             with self.canvas.after:
                 Color(*kivy.utils.get_color_from_hex('#A1A5AA'))
                 radius = 2 * self.height
                 self.ell = Line(circle=(self.x, self.y, radius, 0, 360, 6), width=2)
             return False
 
-        # Register if within bounds of circle that the hex is inscribed in.
-        radius = 2 * self.height
-        dist = Vector(self.x, self.y).distance((touch.x, touch.y))
-        if radius - dist < 0:
-            return False
-
+        Logger.debug('Selected: ({}, {})'.format(coord_x, coord_y))
         with self.canvas.after:
             if 'button' in touch.profile and touch.button == 'left':
                 Color(*kivy.utils.get_color_from_hex('#00FF00'))
@@ -130,6 +128,15 @@ class HexMapCell(Label):
 
         self.parent.game.update_selected_cell(self.map_coordinates(), self.terrain_colour)
         return True
+
+    def collide_with_bounding_circle(self, coord_x, coord_y):
+        # Register if within bounds of circle that the hex is inscribed in.
+        Logger.debug('Detected: ({}, {})'.format(coord_x, coord_y))
+        radius = 2 * self.height
+        dist = Vector(self.x, self.y).distance((coord_x, coord_y))
+        Logger.debug('({}, {}) -> ({}, {})'.format(self.x, self.y, coord_x, coord_y))
+        Logger.debug('Dist: {} Diff: {}'.format(dist, dist - radius))
+        return dist - radius <= 0
 
 
 class StrategyGameApp(app.App):
