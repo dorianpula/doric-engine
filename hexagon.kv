@@ -1,0 +1,20 @@
+#:include debug.kv
+BoxLayout:
+    orientation: 'horizontal'
+    Hex:
+        pos: self.pos
+        DebugLabel:
+            text: '1'
+    Hex:
+        pos: self.pos
+        DebugLabel:
+            text: '1'
+<Hex@Label>:
+    pos_hint: {'center_x':.5, 'center_y':.5}
+    canvas.after:
+        Color:
+            rgba: 1,1,1,1
+        Ellipse:
+            segments: 6
+            pos: self.pos
+            size: min(self.width, self.height), min(self.width, self.height)
