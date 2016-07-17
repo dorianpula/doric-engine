@@ -4,6 +4,7 @@ from kivy import app, properties
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Color, Ellipse, Line, Rectangle
+from kivy.vector import Vector
 import kivy.utils
 
 MapCoords = collections.namedtuple('MapCoords', ['row', 'col'])
@@ -109,6 +110,12 @@ class HexMapCell(Label):
                 Color(*kivy.utils.get_color_from_hex('#A1A5AA'))
                 radius = 2 * self.height
                 self.ell = Line(circle=(self.x, self.y, radius, 0, 360, 6), width=2)
+            return False
+
+        # Register if within bounds of circle that the hex is inscribed in.
+        radius = 2 * self.height
+        dist = Vector(self.x, self.y).distance((touch.x, touch.y))
+        if radius - dist < 0:
             return False
 
         with self.canvas.after:
