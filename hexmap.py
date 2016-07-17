@@ -53,7 +53,7 @@ class HexMapCell(Label):
         return '{}\n{}\n{}'.format(*self.cube_coords)
 
     def map_display_text(self):
-        return "{}\n{} \n {}".format(self.even_r_coordinate_text(), self.cube_coordinate_text(), terrain)
+        return "{}\n{} \n {}".format(self.even_r_coordinate_text(), self.cube_coordinate_text(), self.terrain)
 
     def update_pos(self, instance, value):
         # Determine the location of the solid hexagon cell.  Needs to be offset from the centre of the hex.
@@ -76,7 +76,7 @@ class HexMapCell(Label):
         if super(HexMapCell, self).on_touch_down(touch):
             return False
 
-        coord_x, coord_y = self.map_coordinates()
+        coord_x, coord_y = self.even_r_coords
         if not self.visible_on_map:
             return False
 
@@ -99,7 +99,7 @@ class HexMapCell(Label):
             radius = 2 * self.height
             self.ell = Line(circle=(self.x, self.y, radius, 0, 360, 6), width=2)
 
-        self.parent.game.update_selected_cell(self.map_coordinates(), self.terrain_colour)
+        self.parent.game.update_selected_cell(self.even_r_coords, self.terrain_colour)
         return True
 
     def collide_with_bounding_circle(self, coord_x, coord_y):

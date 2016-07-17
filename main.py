@@ -1,10 +1,12 @@
-
 from kivy import app, properties
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics import Color, Ellipse, Line
+from kivy.graphics import Color, Ellipse, Line, Rectangle
 import kivy.utils
+
+
 from hexmap import HexMapCell
+from terrain import choose_random_terrain, Terrains
 
 
 class StrategyGame(FloatLayout):
@@ -58,7 +60,6 @@ class StrategyGame(FloatLayout):
 
                 # Bind the cell code so as to update its position and size when the parent widget resizes.
                 hex_cell.bind(pos=hex_cell.update_pos, size=hex_cell.update_pos)
-
 
     def update_selected_cell(self, coords, terrain_colour, *args):
         self.status.text = 'Coords: ({}, {})'.format(coords[0], coords[1])
